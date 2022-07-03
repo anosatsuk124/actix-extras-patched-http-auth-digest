@@ -1,15 +1,10 @@
 use crate::headers::authorization::{errors::ParseError, Scheme};
 use actix_web::{
-    http::header::{HeaderValue, IfNoneMatch, InvalidHeaderValue, TryIntoHeaderValue},
-    web::{BufMut, Bytes, BytesMut},
+    http::header::{HeaderValue, InvalidHeaderValue, TryIntoHeaderValue},
+    web::Bytes,
 };
-use regex::{CaptureMatches, Regex};
-use std::{
-    borrow::Cow,
-    collections::HashMap,
-    fmt::{self, Debug},
-    str,
-};
+use regex::Regex;
+use std::{borrow::Cow, collections::HashMap, fmt};
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Digest {
@@ -28,7 +23,7 @@ pub struct Digest {
 impl Scheme for Digest {
     fn parse(header: &HeaderValue) -> Result<Self, ParseError> {
         let re_digest = Regex::new(r"Digest(.+)").unwrap();
-        let mut parts = re_digest
+        let parts = re_digest
             .captures(header.to_str()?)
             .ok_or(ParseError::Invalid)
             .map(|parts| parts.get(0).unwrap().as_str())?;
@@ -37,9 +32,6 @@ impl Scheme for Digest {
             return Err(ParseError::MissingScheme);
         }
 
-        //let authorization_props = Regex::new(r###"(?P<key>[a-z]+|[a-z]+\*)=(?P<prop>[[:ascii:]]+|"[[[:ascii:]][[:space]]]+"|utf8[[[:ascii::]][[:space:]]]+)"###).unwrap();
-
-        // let authorization_props = Regex::new(r###"(?P<key>[a-z]+|[a-z]+\*)=(?P<prop>[[:ascii:]]+|"[[:ascii:]]+"|utf8[[:ascii::]]+),"###).unwrap();
         let authorization_props = Regex::new(
             r###"(?P<key>[a-z]+|[a-z]+\*)=(?P<prop>[[^,]&&[[:ascii:]]]+|"[[^,]&&[[:ascii:]]]+")"###,
         )
