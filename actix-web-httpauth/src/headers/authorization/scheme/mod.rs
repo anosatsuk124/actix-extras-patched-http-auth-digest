@@ -4,6 +4,7 @@ use actix_web::http::header::{HeaderValue, TryIntoHeaderValue};
 
 pub mod basic;
 pub mod bearer;
+pub mod digest;
 
 use crate::headers::authorization::errors::ParseError;
 

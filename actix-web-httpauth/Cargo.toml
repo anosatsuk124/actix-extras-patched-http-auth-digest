@@ -27,6 +27,8 @@ futures-util = { version = "0.3.7", default-features = false }
 futures-core = { version = "0.3.7", default-features = false }
 pin-project-lite = "0.2.7"
 
+regex = "1"
+
 [dev-dependencies]
 actix-cors = "0.6.0"
 actix-web = { version = "4", default_features = false, features = ["macros"] }
