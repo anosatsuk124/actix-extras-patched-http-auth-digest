@@ -4,6 +4,7 @@ use actix_web::{http::header::TryIntoHeaderValue, web::Bytes};
 
 pub mod basic;
 pub mod bearer;
+pub mod digest;
 
 /// Authentication challenge for `WWW-Authenticate` header.
 pub trait Challenge: TryIntoHeaderValue + Debug + Display + Clone + Send + Sync {
